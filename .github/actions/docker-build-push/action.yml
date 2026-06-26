@@ -1,0 +1,40 @@
+name: Docker build and push
+
+inputs:
+  docker_user: 
+    required: true
+    description: Dockerhub Username
+
+  docker_password:
+    required: true
+    description: Dockerhub --password-stdin
+
+  iamge_name: 
+    required: true
+    description: Docker image name 
+
+runs:
+  using: composite
+  steps:
+    - name: Build Docker image
+      shell: bash
+      run: |
+        docker build \
+        -t ${{inputs.docker_user}}/${{inputs.image_name}}:latest \
+        -t ${{inputs.docker_user}}/${{inputs.image_name}}:${{github.sha}} \
+        .
+      
+    - name: Login to DockerHub
+      shell: bash
+      run: |
+        echo "${{ inputs.docker_password }}" | docker login -u "${{ inputs.docker_user }}" --password-stdin
+
+    - name: Push Latest Tag
+      shell: bash
+      run: |
+        docker push ${{ inputs.docker_user }}/${{ inputs.image_name }}:latest
+
+    - name: Push Git SHA Tag
+      shell: bash
+      run: |
+        docker push ${{ inputs.docker_user }}/${{ inputs.image_name }}:${{ github.sha }}  
