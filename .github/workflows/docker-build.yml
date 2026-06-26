@@ -8,7 +8,9 @@ on:
         - main
 
 jobs:
+  
   docker-build:
+    name: docker-build-ci
     runs-on: ubuntu-latest
     steps:
       - name: Checkout -repo
