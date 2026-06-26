@@ -16,19 +16,24 @@ jobs:
     
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout -repo
+      - name: Checkout-repo 
         uses: actions/checkout@v4
 
       - name: build docker image
         run: docker build -t $IMAGE_NAME .
 
       - name: docker image tag 
-        run:  docker tag $IMAGE_NAME ${{secrets.DOCKER_USER}}/$IMAGE_NAME:latest
-
+        run: | 
+          docker tag $IMAGE_NAME ${{secrets.DOCKER_USER}}/$IMAGE_NAME:latest
+          docker tag $IMAGE_NAME ${{secrets.DOCKER_USER}}/$IMAGE_NAME:${{github.sha}}
+      
       - name: docker login 
         run: echo "${{secrets.DOCKER_PASSWORD}}" | docker login -u "${{secrets.DOCKER_USER}}" --password-stdin
 
       
 
       - name: docker push
-        run: docker push ${{secrets.DOCKER_USER}}/$IMAGE_NAME:latest
+        run: |
+          docker push ${{secrets.DOCKER_USER}}/$IMAGE_NAME:latest
+          docker push ${{secrets.DOCKER_USER}}/$IMAGE_NAME:${{github.sha}}
+          
