@@ -11,7 +11,7 @@ on:
         required: true
       docker_password:
         required: true
-        type: string
+      
 
 jobs:
   docker-build:
