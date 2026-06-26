@@ -7,6 +7,9 @@ on:
       branches:
         - main
 
+env:
+  IMAGE_NAME: two-tier-flask-app-gitactions
+
 jobs:
   
   docker-build:
@@ -17,6 +20,15 @@ jobs:
         uses: actions/checkout@v4
 
       - name: build docker image
-        run: docker build -t two-tier-flask-app-gitactions:latest .
+        run: docker build -t $IMAGE_NAME .
 
-        
+      - name: docker image tag 
+        run:  docker tag $IMAGE_NAME ${{secrets.DOCKER_USER}}/$IMAGE_NAME:latest
+
+      - name: docker login 
+        run: echo "${{secrets.DOCKER_PASSWORD}}" | docker login -u "${{secrets.DOCKER_USER}}" --password-stdin
+
+      
+
+      - name: docker push
+        run: docker push ${{secrets.DOCKER_USER}}/$IMAGE_NAME:latest
