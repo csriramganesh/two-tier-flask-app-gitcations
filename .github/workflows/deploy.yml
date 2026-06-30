@@ -1,0 +1,18 @@
+name: Test EC2 Checkout
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-checkout:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Show Current Folder
+        run: pwd
+
+      - name: List Repository Files
+        run: ls -la
