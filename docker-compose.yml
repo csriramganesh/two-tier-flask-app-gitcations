@@ -16,7 +16,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: flask-app:compose
+    image: csriramganesh/two-tier-flask-app-gitactions:latest
     container_name: flaskapp-compose
     environment:
       MYSQL_HOST: mysql
