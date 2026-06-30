@@ -13,9 +13,6 @@ services:
       - "3306:3306"
 
   flaskapp:
-    build:
-      context: .
-      dockerfile: Dockerfile
     image: csriramganesh/two-tier-flask-app-gitactions:latest
     container_name: flaskapp-compose
     environment:
