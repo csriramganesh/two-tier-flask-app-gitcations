@@ -1,18 +1,29 @@
-name: Test EC2 Checkout
+name: Test Docker Compose Up
 
 on:
   workflow_dispatch:
 
 jobs:
-  test-checkout:
+  compose-up:
     runs-on: self-hosted
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Show Current Folder
-        run: pwd
+      - name: DockerHub Login
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
+      
+      - name: Docker pull image
+        run: docker compose pull 
 
-      - name: List Repository Files
-        run: ls -la
+
+      - name: Start App Using Docker Compose
+        run: docker compose up -d
+
+      - name: Check Running Containers
+        run: docker ps
+
+      - name: Check Compose Services
+        run: docker compose ps
