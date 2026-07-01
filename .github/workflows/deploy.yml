@@ -1,10 +1,15 @@
-name: Test Docker Compose Up
+name: Deploy to EC2
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: ["Docker CI"]
+    types:
+      - completed
 
 jobs:
-  compose-up:
+  deploy:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: self-hosted
 
     steps:
@@ -14,16 +19,11 @@ jobs:
       - name: DockerHub Login
         run: |
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
-      
-      - name: Docker pull image
-        run: docker compose pull 
 
-
-      - name: Start App Using Docker Compose
-        run: docker compose up -d
-
-      - name: Check Running Containers
-        run: docker ps
-
-      - name: Check Compose Services
-        run: docker compose ps
+      - name: Deploy using Docker Compose
+        run: |
+          docker compose down
+          docker compose pull
+          docker compose up -d
+          docker ps
+          docker compose ps
