@@ -1,4 +1,4 @@
-name: reusable-docker-build.yml
+name: reusable-docker-build
 
 on:
   workflow_call:
